@@ -1,0 +1,167 @@
+  <!DOCTYPE html>
+<html lang="ar">
+  <head>
+    <meta charset="UTF-8" />
+    <title>الدعم</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div class="chat-container">
+      <h2>محادثة العميل</h2>
+      <div id="messages" class="messages"></div>
+      <div id="typing"></div>
+      <form id="chat-form">
+        <input
+          id="message-input"
+          autocomplete="off"
+          placeholder="اكتب رسالتك هنا..."
+        />
+        <button type="button" id="send-btn">إرسال</button>
+
+      </form>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <script>
+      const socket = io("http://localhost:3000");
+      socket.emit("register", "admin");
+
+      const form = document.getElementById("chat-form");
+      const input = document.getElementById("message-input");
+      const messages = document.getElementById("messages");
+      const typing = document.getElementById("typing");
+
+      form.addEventListener("submit", (e) => {
+
+
+        const sendBtn = document.getElementById("send-btn");
+
+sendBtn.addEventListener("click", () => {
+  const msg = input.value.trim();
+  if (msg) {
+    socket.emit("chatMessage", { from: "hotelOwner", text: msg });
+    addMessage(msg, "hotelOwner");
+    input.value = "";
+    input.focus();
+  }
+});
+
+        e.preventDefault();
+        const msg = input.value.trim();
+        if (msg) {
+          socket.emit("chatMessage", { from: "admin", text: msg });
+          addMessage(msg, "admin");
+          input.value = "";
+          input.focus();
+        }
+      });
+
+      input.addEventListener("input", () => {
+        socket.emit("typing", { from: "admin" });
+      });
+
+      socket.on("chatMessage", (data) => {
+        addMessage(data.text, data.from);
+      });
+
+      socket.on("chatHistory", (history) => {
+        history.forEach((msg) => addMessage(msg.text, msg.from, msg.time));
+      });
+
+      socket.on("typing", (data) => {
+        if (data.from === "client") {
+          typing.textContent = "العميل يكتب الآن...";
+          clearTimeout(typing.timeout);
+          typing.timeout = setTimeout(() => {
+            typing.textContent = "";
+          }, 2000);
+        }
+      });
+
+      function addMessage(msg, sender, time = new Date().toLocaleTimeString()) {
+        const wrapper = document.createElement("div");
+        wrapper.classList.add(
+          "message",
+          sender === "admin" ? "admin" : "client"
+        );
+
+        wrapper.innerHTML = `
+          <div>${sender === "admin" ? "أنا" : "العميل"}: ${msg}</div>
+          <div class="timestamp">${time}</div>
+        `;
+
+        messages.appendChild(wrapper);
+        messages.scrollTop = messages.scrollHeight;
+      }
+
+      if (Notification.permission !== "granted") {
+        Notification.requestPermission();
+      }
+
+      socket.on("notification", (data) => {
+        if (Notification.permission === "granted") {
+          new Notification("📩 رسالة جديدة", {
+            body: `${data.from}: ${data.text}`,
+            icon: "/chat-icon.png",
+          });
+        }
+
+        const audio = new Audio("./so-proud-notification.mp3");
+        audio.play().catch(console.warn);
+
+        Swal.fire({
+          title: "📩 رسالة جديدة!",
+          text: `${data.from}: ${data.text}`,
+          toast: true,
+          position: "bottom-end",
+          timer: 3000,
+          showConfirmButton: false,
+          background: "#333",
+          color: "#fff",
+          icon: "info",
+        });
+      });
+    </script>
+  </body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+ -->
+
+
+

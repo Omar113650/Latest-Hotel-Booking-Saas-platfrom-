@@ -1,0 +1,34 @@
+<!-- <!DOCTYPE html>
+<html lang="ar">
+<head>
+  <meta charset="UTF-8">
+  <title>تجربة إشعارات Firebase</title>
+</head>
+<body>
+  <h2>تجربة إشعارات Firebase Web</h2>
+  <button id="getTokenBtn">الحصول على FCM Token</button>
+
+  <script type="module">
+    import { messaging } from './web-fcm/firebaseWebInit.js';
+    import { getToken } from "https://www.gstatic.com/firebasejs/10.5.0/firebase-messaging.js";
+
+    const btn = document.getElementById('getTokenBtn');
+
+    btn.addEventListener('click', async () => {
+      try {
+        const currentToken = await getToken(messaging, { 
+          vapidKey: 'BIskJOuMjkVW5-QQR2vpeLqWqWpyulSz8pOKFLcI-kig_38Eim0gLBb0hiqODfjgGeMUXvUfE84am2RG9IjKL5Y'
+        });
+        if (currentToken) {
+          console.log('✅ FCM Token:', currentToken);
+          alert('تم الحصول على التوكن! انسخه من الكونسول.');
+        } else {
+          console.log('❌ لا يوجد إذن للإشعارات.');
+        }
+      } catch (err) {
+        console.error('🔥 حصل خطأ:', err);
+      }
+    });
+  </script>
+</body>
+</html> -->

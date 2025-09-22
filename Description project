@@ -1,0 +1,168 @@
+# Hotel Booking System
+
+## Project Overview
+**Hotel Booking System** is a full-featured web application designed to manage hotel reservations efficiently. It allows clients to search for hotels, book rooms, chat with hotel owners, receive real-time notifications, and make payments online. The system supports three roles:
+
+- **Admin**: Full control over the system, including users, hotels, bookings, and notifications.  
+- **Hotel Owner**: Manage their own hotels, rooms, and bookings.  
+- **Client**: Search hotels, make bookings, chat with hotel owners, and receive notifications.  
+
+The project also includes a **real-time chat system**, **payment integration**, and **weekly notifications** using cron jobs.
+
+---
+
+## Features
+
+### For Clients:
+- Browse hotels and available rooms  
+- Search by location, price, and availability  
+- Book rooms and manage bookings  
+- Real-time chat with hotel owners  
+- Receive real-time notifications when booking or new hotel is added  
+
+### For Hotel Owners:
+- Add, update, and delete their hotels and rooms  
+- Manage bookings for their hotels  
+- Chat with clients directly  
+- Receive notifications when a client books a room  
+
+### For Admins:
+- Full control over all hotels, rooms, bookings, and users  
+- Assign roles and manage access  
+- Access analytics and system overview  
+- Manage notifications and subscriptions  
+
+### Other Features:
+- Payment integration using Stripe  
+- OAuth login with Google, Microsoft, and GitHub  
+- Security with JWT authentication, helmet, HPP, CORS, and rate-limiting  
+- Background jobs using **node-cron**  
+- Real-time notifications and chat with **Socket.IO**  
+- Image upload support via Multer and Cloudinary  
+
+---
+
+## Tech Stack
+
+**Backend:** Node.js, Express.js  
+**Database:** MongoDB (Mongoose)  
+**Real-time:** Socket.IO  
+**Authentication:** JWT + OAuth strategies (Google, Microsoft, GitHub)  
+**Payments:** Stripe  
+**Notifications:** Real-time + Cron jobs  
+**Security:** Helmet, HPP, CORS, rate-limiting  
+**File Upload:** Multer + Cloudinary  
+
+---
+
+## Project Structure
+
+hotel-booking/
+├─ controllers/ # Controllers for Auth, Booking, Hotel, Admin, Chat
+├─ routes/ # API Routes
+├─ middleware/ # Error handling, authentication, validation
+├─ model/ # Mongoose models (User, Hotel, Booking, Notification)
+├─ config/ # DB and environment configuration
+├─ cron/ # Scheduled jobs (weekly notifications)
+├─ strategies/ # OAuth strategies (Google, Microsoft, GitHub)
+├─ utils/ # Helper functions (notifications, email)
+└─ app.js # Entry point, Socket.IO setup, HTTP server
+
+markdown
+Copy code
+
+---
+
+## API Endpoints
+
+### Auth
+- `POST /api/v1/Auth/register` - Register a new user  
+- `POST /api/v1/Auth/login` - Login  
+- `GET /api/v1/Auth/logout` - Logout  
+
+### Hotels
+- `GET /api/v1/Hotel` - Get all hotels  
+- `POST /api/v1/Hotel` - Add a new hotel (Hotel Owner/Admin)  
+- `PUT /api/v1/Hotel/:id` - Update hotel  
+- `DELETE /api/v1/Hotel/:id` - Delete hotel  
+
+### Rooms
+- `GET /api/v1/Hotel/rooms` - Get rooms by hotel  
+- `POST /api/v1/Hotel/rooms` - Add room (Hotel Owner/Admin)  
+- `PUT /api/v1/Hotel/rooms/:id` - Update room  
+- `DELETE /api/v1/Hotel/rooms/:id` - Delete room  
+
+### Bookings
+- `POST /api/v1/Book` - Create booking  
+- `GET /api/v1/Book` - Get bookings for user  
+- `DELETE /api/v1/Book/:id` - Cancel booking  
+
+### Admin
+- `GET/POST/PUT/DELETE /api/v1/Admin/...` - Manage all entities  
+
+### Hotel Owner
+- `GET/POST/PUT/DELETE /api/v1/Hotel-owner/...` - Manage own hotels and bookings  
+
+### User Dashboard
+- `GET /api/v1/User-Dashboard/...` - Access user-specific data  
+
+### Payments
+- `POST /api/v1/payment/...` - Process payments  
+
+### Notifications & Subscription
+- `GET/POST /api/NotificationCronJob` - Real-time notifications  
+- `GET/POST /api/SubscriptionCronJob` - Manage subscriptions  
+
+---
+
+## Running the Project
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/hotel-booking.git
+cd hotel-booking
+Install dependencies:
+
+bash
+Copy code
+npm install
+Create .env file:
+
+ini
+Copy code
+PORT=5000
+DATABASE_URL=mongodb://localhost:27017/hotel_booking
+JWT_SECRET=your_jwt_secret
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_api_key
+CLOUDINARY_API_SECRET=your_api_secret
+STRIPE_SECRET_KEY=your_stripe_key
+Start the server:
+
+bash
+Copy code
+npm run dev
+Server will run at http://localhost:5000 with Socket.IO support for chat and notifications.
+
+Contributing
+Fork the repository
+
+Create a new branch: git checkout -b feature/your-feature
+
+Make your changes
+
+Commit your changes: git commit -m 'Add some feature'
+
+Push to the branch: git push origin feature/your-feature
+
+Open a Pull Request
+
+License
+MIT License
+
+markdown
+Copy code
+
+لو تحب، أقدر أعمل كمان **نسخة README مع صور للشاشات والشرح خطوة خطوة لكل جزء في الموقع** بحيث تكون جاهزة للـ GitHub وكتابة الـ Documentation الاحترافي.  
+
+تحب أعملهولك؟
