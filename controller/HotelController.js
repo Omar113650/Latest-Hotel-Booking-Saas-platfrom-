@@ -9,6 +9,28 @@ import ApiResponse from "../utils/ApiResponse.js";
 import AppError from "../utils/AppError.js";
 import { Notification } from "../model/Notification.model.js";
 
+const generateTokens = (userId) => {
+  const accessToken = jwt.sign({ id: userId }, process.env.JWT_SECRET, {
+    expiresIn: "15m",
+  });
+
+  const refreshToken = jwt.sign(
+    { id: userId },
+    process.env.JWT_REFRESH_SECRET,
+    { expiresIn: "7d" }
+  );
+
+  return { accessToken, refreshToken };
+};
+
+const setRefreshCookie = (res, refreshToken) => {
+  res.cookie("RefreshToken", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "strict",
+    maxAge: 7 * 24 * 60 * 60 * 1000,
+  });
+};
 // @desc    Register Hotel Owner + Create Hotel
 // @route   POST /api/v1/register
 // @access  Public
@@ -82,11 +104,8 @@ export const RegisterHotelOwner = AsyncHandler(async (req, res, next) => {
     documents: mappedDocuments,
   });
 
-  const accessToken = jwt.sign(
-    { id: newOwner._id, role: newOwner.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "15m" }
-  );
+  const { accessToken, refreshToken } = generateTokens(newOwner._id);
+  setRefreshCookie(res, refreshToken);
 
   await sendEmail({
     to: newOwner.Email,
@@ -139,7 +158,7 @@ export const RegisterHotelOwner = AsyncHandler(async (req, res, next) => {
     .json(
       new ApiResponse(
         201,
-        { owner: newOwner, hotel: newHotel, accessToken },
+        { owner: newOwner, hotel: newHotel, accessToken, refreshToken },
         "Hotel Owner & Hotel registered successfully"
       )
     );
@@ -179,34 +198,52 @@ export const Login = AsyncHandler(async (req, res, next) => {
       </p>
     </div>`,
   });
-
-  const accessToken = jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "15m" }
-  );
-
-  const refreshToken = jwt.sign(
-    { id: user._id, role: user.role },
-    process.env.JWT_SECRET,
-    { expiresIn: "7d" }
-  );
-
-  res.cookie("AccessToken", accessToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "strict",
-    maxAge: 15 * 60 * 1000,
-  });
-
-  res.cookie("RefreshToken", refreshToken, {
-    httpOnly: true,
-    secure: false,
-    sameSite: "strict",
-    maxAge: 7 * 24 * 60 * 60 * 1000,
-  });
+  const { accessToken, refreshToken } = generateTokens(user._id);
+  setRefreshCookie(res, refreshToken);
 
   res
     .status(200)
     .json(new ApiResponse(200, { user, accessToken }, "Login successful"));
+});
+
+// @desc    Refresh access token
+// @route   POST /api/v1/auth/refresh
+// @access  Public
+export const RefreshToken = AsyncHandler(async (req, res, next) => {
+  const refreshToken = req.cookies.RefreshToken || req.body.refreshToken;
+
+  if (!refreshToken) {
+    return next(new AppError("No refresh token provided", 401));
+  }
+
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_REFRESH_SECRET);
+
+    const newOwner = await User.findById(decoded.id);
+    if (!newOwner) {
+      return next(new AppError("newOwner not found", 404));
+    }
+
+    const { accessToken } = generateTokens(newOwner._id);
+
+    res.cookie("AccessToken", accessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: "strict",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res
+      .status(200)
+      .json(
+        new ApiResponse(
+          200,
+          { accessToken },
+          "Access token refreshed successfully"
+        )
+      );
+  } catch (err) {
+    console.error("Refresh error:", err);
+    return next(new AppError("Invalid or expired refresh token", 401));
+  }
 });

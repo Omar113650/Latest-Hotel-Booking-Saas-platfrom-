@@ -4,7 +4,10 @@ import { Booking } from "../model/Booking.js";
 import ApiResponse from "../utils/ApiResponse.js";
 import AppError from "../utils/AppError.js";
 import { Notification } from "../model/Notification.model.js";
-// Get hotel by ID
+
+// @desc    Get getHotelById
+// @route   GET /api/v1/Hotel
+// @access  Private (User)
 export const getHotelById = AsyncHandler(async (req, res, next) => {
   const hotel = await Hotel.findById(req.params.id).populate(
     "user",
@@ -20,28 +23,9 @@ export const getHotelById = AsyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, hotel, "Hotel fetched successfully"));
 });
 
-// // Create booking
-export const createBooking = AsyncHandler(async (req, res, next) => {
-  const { hotelId, checkIn, checkOut, guests } = req.body;
-
-  const hotel = await Hotel.findById(hotelId);
-  if (!hotel) return next(new AppError("Hotel not found", 404));
-
-  const booking = await Booking.create({
-    hotel: hotelId,
-    user: req.user.id,
-    checkIn,
-    checkOut,
-    guests,
-    status: "Pending",
-  });
-
-  res
-    .status(201)
-    .json(new ApiResponse(201, booking, "Booking created successfully"));
-});
-
-// Get bookings for hotel owner
+// @desc   getHotelBookings
+// @route   GET /api/getHotelBookings
+// @access  Private
 export const getHotelBookings = AsyncHandler(async (req, res, next) => {
   const ownerId = req.params.id;
 
@@ -58,7 +42,9 @@ export const getHotelBookings = AsyncHandler(async (req, res, next) => {
     .json(new ApiResponse(200, bookings, "Bookings fetched successfully"));
 });
 
-// Get all bookings (filterable)
+// @desc   get Hotel All Booked for me and search by name and filter by status
+// @route   GET /api/getHotelAllBooked
+// @access  Private
 export const getHotelAllBooked = AsyncHandler(async (req, res, next) => {
   const { keyword, documents, status } = req.query;
   const query = {};
@@ -79,7 +65,7 @@ export const getHotelAllBooked = AsyncHandler(async (req, res, next) => {
 });
 
 // @desc    Get booking  notifications
-// @route   GET /api/notifications/
+// @route   GET /api/notifications
 // @access  Private
 export const getUserNotifications = AsyncHandler(async (req, res, next) => {
   const notifications = await Notification.find({

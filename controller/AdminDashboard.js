@@ -6,7 +6,7 @@ import ApiResponse from "../utils/ApiResponse.js";
 import AppError from "../utils/AppError.js";
 import { Notification } from "../model/Notification.model.js";
 
-// @desc  get All Hotels
+// @desc  get All Hotels and filter by status
 // @route   GET /api/v1/Admin/hotels
 // @access  Private
 export const getAllHotels = AsyncHandler(async (req, res, next) => {
@@ -71,6 +71,9 @@ export const changeHotelStatus = AsyncHandler(async (req, res, next) => {
 // @access  Private
 export const getAllOwners = AsyncHandler(async (req, res, next) => {
   const owners = await User.find({ role: "Hotel Owner" }).select("-Password");
+  if (!owners) {
+    return next(AppError("not found any Hotel Owner", 404));
+  }
 
   res
     .status(200)
@@ -138,6 +141,8 @@ export const getAllBookings = AsyncHandler(async (req, res, next) => {
 });
 
 // GET /api/notifications/admin
+// @route   GET /api/v1/notification/
+// @access  Private
 export const getAdminNotifications = AsyncHandler(async (req, res, next) => {
   const admin = await User.findOne({ role: "Admin" });
   if (!admin) return next(new AppError("Admin not found", 404));

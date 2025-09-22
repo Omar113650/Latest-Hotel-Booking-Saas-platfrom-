@@ -1,3 +1,4 @@
+// import { boolean } from "joi";
 import mongoose, { Schema, model } from "mongoose";
 
 const HotelSchema = new Schema(
@@ -8,7 +9,6 @@ const HotelSchema = new Schema(
       required: true,
     },
 
-    
     hotelName: {
       type: String,
       required: true,
@@ -48,19 +48,18 @@ const HotelSchema = new Schema(
       },
     ],
 
-documents: [
-  {
-    type: {
-      type: String,
-      enum: ["text", "image"],
-      required: true,
-    },
-    content: { type: String, required: true, trim: true },
-    publicId: { type: String, trim: true },
-    _id: false,
-  },
-],
-
+    documents: [
+      {
+        type: {
+          type: String,
+          enum: ["text", "image"],
+          required: true,
+        },
+        content: { type: String, required: true, trim: true },
+        publicId: { type: String, trim: true },
+        _id: false,
+      },
+    ],
 
     status: {
       type: String,
@@ -79,20 +78,23 @@ documents: [
       enum: ["available", "not available"],
       default: "available",
     },
+    isActive: {
+      type: Boolean,
+      default:"true"
+    },
   },
-  { timestamps: true ,
+  {
+    timestamps: true,
     toJSON: { virtuals: true }, // مهم عشان يظهر virtual لما تعمل JSON
     toObject: { virtuals: true },
   }
 );
 HotelSchema.virtual("userDetails", {
-  ref: "User",           // الموديل اللي عايز تعمله populate
-  localField: "user",   // الحقل اللي في الـ HotelSchema
-  foreignField: "_id",   // الحقل اللي في الـ User
-  justOne: true          // هيرجع object واحد مش array
+  ref: "User", // الموديل اللي عايز تعمله populate
+  localField: "user", // الحقل اللي في الـ HotelSchema
+  foreignField: "_id", // الحقل اللي في الـ User
+  justOne: true, // هيرجع object واحد مش array
 });
-
-
 
 HotelSchema.virtual("hotelDetails", {
   ref: "Booking",

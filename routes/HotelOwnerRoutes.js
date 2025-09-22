@@ -22,7 +22,7 @@ const router = express.Router();
 
 router.get("/get-all-hotel", VerifyTokenHotelOwner, getHotelAll);
 
-router.get("/owner/bookings-hotel", VerifyTokenHotelOwner, getHotelBookings);
+router.get("/owner/bookings-hotel", getHotelBookings);
 
 router.post(
   "/:id/price-hotel-book",

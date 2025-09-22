@@ -38,7 +38,8 @@ export const BookHotel = AsyncHandler(async (req, res, next) => {
     checkOut,
     pricePerDay: hotel.pricePerDay,
     totalPrice,
-    status: "Pending",
+    // status: "Pending",
+
   });
 
   if (hotel.user && hotel.user.role === "Hotel Owner") {

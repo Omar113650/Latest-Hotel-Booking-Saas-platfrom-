@@ -23,16 +23,16 @@ export const getHotelBookings = AsyncHandler(async (req, res) => {
   const hotels = await Hotel.find(query)
     .populate("userDetails", "Name Email Phone")
     .sort(sortHotel)
-    .select("_id user");
+    .select("_id user ");
 
   if (!hotels.length) {
     return res
       .status(404)
       .json({ success: false, message: "No hotels found for this owner" });
   }
-
+  // هاتلي كل الحجوزات اللي الـ hotel بتاعها قيمته موجودة جوه المصفوفة hotels
   const bookings = await Booking.find({ hotel: { $in: hotels } })
-    .populate("userDetails", "Name Email Phone") // ✅ صححت customer → user
+    .populate("userDetails", "Name Email Phone")
     .populate("hotel", "hotelName address")
     .sort(sortHotel);
 
@@ -48,16 +48,12 @@ export const getHotelBookings = AsyncHandler(async (req, res) => {
 // @access  Private (Customer)
 export const priceDay = AsyncHandler(async (req, res) => {
   const { pricePerDay } = req.body;
-
-  // 1) جيب الفندق
   const hotel = await Hotel.findById(req.params.id);
   if (!hotel) {
     return res.status(404).json({ success: false, message: "Hotel not found" });
   }
-
-  // 2) حدّث الـ pricePerDay
   hotel.pricePerDay = pricePerDay;
-  await hotel.save(); // احفظ التعديل
+  await hotel.save();
 
   res.status(201).json({
     success: true,
@@ -65,7 +61,11 @@ export const priceDay = AsyncHandler(async (req, res) => {
     data: hotel,
   });
 });
-// تأكيد الحجز وإرسال إشعار أوتوماتيك
+
+// @desc    confirm booking
+// @route   PATCH /api/v1/bookings/:id/confirm
+// @access  Private (Hotel Owner)
+
 export const ConfirmBooking = AsyncHandler(async (req, res) => {
   const booking = await Booking.findById(req.params.id)
     .populate("hotel") // جلب بيانات الفندق
@@ -255,25 +255,6 @@ export const DeleteHotel = AsyncHandler(async (req, res) => {
   });
 });
 
-// @desc    Update user deviceToken
-// @route   POST /api/users/update-device-token
-// @access  Private
-export const updateDeviceToken = AsyncHandler(async (req, res) => {
-  const { deviceToken } = req.body;
-  const userId = req.user._id; // لو عندك auth middleware
-
-  const user = await User.findByIdAndUpdate(
-    userId,
-    { deviceToken },
-    { new: true }
-  );
-
-  res.status(200).json({
-    message: "Device token updated successfully",
-    deviceToken: user.deviceToken,
-  });
-});
-
 // @desc    Add activity to a hotel (Treasureto Collection)
 // @route   PUT /api/v1/hotels/:id/activities
 // @access  Private
@@ -302,7 +283,6 @@ export const AddHotelActivities = AsyncHandler(async (req, res) => {
   });
 });
 
-// GET /api/notifications/:userId
 // GET /api/notifications/hotel-owners
 export const getHotelOwnersNotifications = AsyncHandler(
   async (req, res, next) => {
