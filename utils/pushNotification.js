@@ -6,7 +6,7 @@ export async function sendPushNotification(token, title, body) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      Authorization: `key=${process.env.FCM_SERVER_KEY}`, // خليه في .env
+      Authorization: `key=${process.env.FCM_SERVER_KEY}`, 
     },
     body: JSON.stringify({
       to: token,
@@ -15,10 +15,3 @@ export async function sendPushNotification(token, title, body) {
     }),
   });
 }
-
-
-// await fetch("/api/users/device-token", {
-//   method: "POST",
-//   headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-//   body: JSON.stringify({ deviceToken }),
-// });

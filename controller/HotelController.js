@@ -109,7 +109,7 @@ export const RegisterHotelOwner = AsyncHandler(async (req, res, next) => {
 
   await sendEmail({
     to: newOwner.Email,
-    subject: "Welcome to Hotel-Book 🎉",
+    subject: "Welcome to Hotel-Book ",
     text: `Hello ${newOwner.Name}, your account has been created successfully! 🎉`,
     html: `<div style="font-family: Arial, sans-serif; background-color:#f4f4f4; padding:20px; text-align:center;">
       <div style="max-width:600px; margin:auto; background:#ffffff; border-radius:10px; padding:30px; box-shadow:0 4px 12px rgba(0,0,0,0.1);">

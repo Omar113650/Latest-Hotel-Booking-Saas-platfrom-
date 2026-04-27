@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const userId = "68c6b4248ed89a100aab27cd"; // الـ ID من userDetails._id
+const userId = "68c6b4248ed89a100aab27cd"; 
 const socket = io("http://localhost:8000", { query: { userId } });
 
 

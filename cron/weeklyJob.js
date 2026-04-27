@@ -1,11 +1,10 @@
 import cron from "node-cron";
 import { Subscription } from "../model/Subscription.js";
-
 import { sendNotificationToUser } from "../utils/sendNotificationToUser.js";
 
 export const weeklyJob = () => {
   cron.schedule("* 1 1 * *", async () => {
-    console.log("⏰ Running weekly notificationCronjobs...");
+    console.log(" Running weekly notificationCronjobs...");
 
     const subscriptions = await Subscription.find();
 
@@ -14,10 +13,10 @@ export const weeklyJob = () => {
       let message = "";
 
       if (sub.role === "User") {
-        title = "فنادق جديدة لك 🎉";
+        title = "فنادق جديدة لك ";
         message = "تم إضافة 3 فنادق جديدة تناسبك.";
       } else if (sub.role === "Hotel Owner") {
-        title = "ضاعف أرباحك 💼";
+        title = "ضاعف أرباحك ";
         message = "رشح أصحابك يضيفوا فنادق أو أضف ضيوف جدد.";
       }
 

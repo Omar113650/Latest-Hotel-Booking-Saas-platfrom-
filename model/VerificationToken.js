@@ -14,13 +14,13 @@ const verificationTokenSchema = new mongoose.Schema(
     },
     expiresAt: {
       type: Date,
-      default: () => Date.now() + 60 * 60 * 1000, // ساعة صلاحية
+      default: () => Date.now() + 60 * 60 * 1000, 
     },
   },
   { timestamps: true }
 );
 
-// حذف التوكن أوتوماتيك بعد انتهاء المدة
+
 verificationTokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 const VerificationToken = mongoose.model("VerificationToken", verificationTokenSchema);

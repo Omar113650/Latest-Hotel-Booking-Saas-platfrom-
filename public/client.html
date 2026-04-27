@@ -88,7 +88,7 @@
 
       socket.on("notification", (data) => {
         if (Notification.permission === "granted") {
-          new Notification("📩 رسالة جديدة", {
+          new Notification(" رسالة جديدة", {
             body: `${data.from}: ${data.text}`,
             icon: "/chat-icon.png",
           });

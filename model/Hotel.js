@@ -33,9 +33,9 @@ const HotelSchema = new Schema(
 
     facilities: [
       {
-        name: { type: String, required: true, trim: true }, // مثال: "Bedroom"
-        icon: { type: String, trim: true }, // اسم الأيقونة (اختياري)
-        value: { type: String, required: true, trim: true }, // مثال: "1" أو "10 mb/s"
+        name: { type: String, required: true, trim: true }, 
+        icon: { type: String, trim: true }, 
+        value: { type: String, required: true, trim: true }, 
         _id: false,
       },
     ],
@@ -85,15 +85,15 @@ const HotelSchema = new Schema(
   },
   {
     timestamps: true,
-    toJSON: { virtuals: true }, // مهم عشان يظهر virtual لما تعمل JSON
+    toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
 HotelSchema.virtual("userDetails", {
-  ref: "User", // الموديل اللي عايز تعمله populate
-  localField: "user", // الحقل اللي في الـ HotelSchema
-  foreignField: "_id", // الحقل اللي في الـ User
-  justOne: true, // هيرجع object واحد مش array
+  ref: "User", 
+  localField: "user", 
+  foreignField: "_id", 
+  justOne: true, 
 });
 
 HotelSchema.virtual("hotelDetails", {

@@ -18,5 +18,5 @@ async function subscribeUser(userId, role) {
     body: JSON.stringify({ userId, role, subscription }),
   });
 
-  console.log("✅ User subscribed for push notifications");
+  console.log(" User subscribed for push notifications");
 }

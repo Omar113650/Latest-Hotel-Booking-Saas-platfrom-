@@ -55,7 +55,7 @@ router.get(
 // router.get("/github", githubLogin);
 // router.get("/github/callback", githubCallback);
 
-// // Microsoft OAuth
+// Microsoft OAuth
 // router.get("/microsoft", microsoftLogin);
 // router.get("/microsoft/callback", microsoftCallback);
 

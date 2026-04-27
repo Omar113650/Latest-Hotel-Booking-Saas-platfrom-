@@ -8,8 +8,3 @@ export const validate = (schema) => {
   };
 };
 
-
-
-
-// router.post("/add-category", validate(CategoriesValidated), AddCategory);
-

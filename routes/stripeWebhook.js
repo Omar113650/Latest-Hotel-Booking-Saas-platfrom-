@@ -59,7 +59,7 @@ router.post(
   }
 );
 
-// Test endpoint (تقدر تجربه من Postman)
+
 router.post("/webhook/test", express.json(), async (req, res) => {
   const event = req.body;
 

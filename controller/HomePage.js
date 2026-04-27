@@ -6,10 +6,10 @@ import { Treasureto } from "../model/TreasuretoChoose.js";
 
 export const SelectHotel = AsyncHandler(async (req, res) => {
   const { select } = req.query;
-  const query = {}; // لو عايز تضيف شروط ممكن تعدل هنا
+  const query = {}; 
   const fields = select ? select.split(",").join(" ") : "";
 
-  // جلب الفنادق بالحقول المحددة
+  
   const hotels = await Hotel.find(query).select(fields);
 
   res.status(200).json({
@@ -209,7 +209,7 @@ export const GetTopBookedHotels = AsyncHandler(async (req, res) => {
 
   const populatedHotels = await Hotel.populate(topHotels, {
     path: "_id",
-    select: "hotelName address pricePerDay", // ✅ location → address
+    select: "hotelName address pricePerDay",
   });
 
   res.status(200).json({

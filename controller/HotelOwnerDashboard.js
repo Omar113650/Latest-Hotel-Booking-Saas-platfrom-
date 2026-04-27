@@ -30,7 +30,7 @@ export const getHotelBookings = AsyncHandler(async (req, res) => {
       .status(404)
       .json({ success: false, message: "No hotels found for this owner" });
   }
-  // هاتلي كل الحجوزات اللي الـ hotel بتاعها قيمته موجودة جوه المصفوفة hotels
+ 
   const bookings = await Booking.find({ hotel: { $in: hotels } })
     .populate("userDetails", "Name Email Phone")
     .populate("hotel", "hotelName address")
@@ -68,8 +68,8 @@ export const priceDay = AsyncHandler(async (req, res) => {
 
 export const ConfirmBooking = AsyncHandler(async (req, res) => {
   const booking = await Booking.findById(req.params.id)
-    .populate("hotel") // جلب بيانات الفندق
-    .populate("userDetails"); // جلب بيانات المستخدم (صاحب الحجز)
+    .populate("hotel") 
+    .populate("userDetails"); 
 
   if (!booking) {
     return res
@@ -77,11 +77,11 @@ export const ConfirmBooking = AsyncHandler(async (req, res) => {
       .json({ success: false, message: "Booking not found" });
   }
 
-  // تحديث حالة الحجز
+ 
   booking.status = "Confirmed";
   await booking.save();
 
-  // إنشاء إشعار للـ User صاحب الحجز
+ 
   const notification = await Notification.create({
     user: booking.userDetails._id, // إشعار يروح لصاحب الحجز
     title: "تأكيد الحجز",
@@ -91,7 +91,7 @@ export const ConfirmBooking = AsyncHandler(async (req, res) => {
     isRead: false,
   });
 
-  // إرسال الإشعار عبر Socket.IO مباشرة
+  
   if (global.io) {
     global.io
       .to(booking.userDetails._id.toString())
@@ -128,7 +128,7 @@ export const CancelBooking = AsyncHandler(async (req, res) => {
   await booking.save();
 
   const notification = await Notification.create({
-    user: booking.userDetails._id, // إشعار يروح لصاحب الحجز
+    user: booking.userDetails._id, 
     title: "إلغاء الحجز",
     message: `تم إلغاء حجزك في ${booking.hotel.hotelName}.`,
     bookingId: booking._id,
@@ -183,7 +183,7 @@ export const getHotelAll = AsyncHandler(async (req, res) => {
   });
 });
 
-//  count total images in all hotels
+
 export const GetAllImage = AsyncHandler(async (req, res) => {
   const AllImage = await Hotel.find().select("images");
 

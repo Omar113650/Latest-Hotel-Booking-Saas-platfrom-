@@ -11,28 +11,24 @@ const transporter = nodemailer.createTransport({
 export const sendEmail = async ({ to, subject, text, html }) => {
   try {
     await transporter.sendMail({
-      from: `"Hotel-Book 🏨" <${process.env.APP_EMAIL_ADDRESS}>`, 
+      from: `"Hotel-Book " <${process.env.APP_EMAIL_ADDRESS}>`, 
       to,
       subject: subject || "Hotel-Book Notification",
       text: text || "You have a new notification from Hotel-Book.",
       html:
         html ||
         `
-          <h2>Hotel-Book Notification 🏨</h2>
+          <h2>Hotel-Book Notification </h2>
           <p>You have received a new message from <strong>Hotel-Book</strong>.</p>
         `,
     });
 
-    console.log("✅ Email sent successfully to:", to);
+    console.log(" Email sent successfully to:", to);
   } catch (error) {
-    console.error("❌ Error sending email:", error.message, error.response || "");
+    console.error(" Error sending email:", error.message, error.response || "");
     throw error;
   }
 };
-
-
-
-
 
 
 

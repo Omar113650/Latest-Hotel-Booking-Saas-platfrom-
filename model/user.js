@@ -24,7 +24,7 @@ const UserSchema = new mongoose.Schema(
       unique: true,
     },
 
-    deviceToken: { type: String }, // ⬅️ نخزن توكن Firebase هنا
+    deviceToken: { type: String }, 
     Country: {
       type: String,
       minlength: 2,

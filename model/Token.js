@@ -24,7 +24,7 @@ const tokenSchema = new mongoose.Schema({
     timestamps: true
 });
 
-// Auto-delete expired tokens
+
 tokenSchema.index({ expiresAt: 1 }, { expireAfterSeconds: 0 });
 
 const Token = mongoose.model('Token', tokenSchema, 'tokens');

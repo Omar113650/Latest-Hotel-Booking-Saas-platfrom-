@@ -3,9 +3,7 @@ import User from "../model/user.js";
 import tokenService from "../service/TokenServices.js";
 import AppError from "../utils/AppError.js";
 
-// =========================
-// Helpers
-// =========================
+
 const mapProfileToUser = (profile) => ({
   id: profile.id,
   email: profile.emails?.[0]?.value,
@@ -21,9 +19,6 @@ const generateUserTokens = async (user) => {
   return { user, accessToken, refreshToken };
 };
 
-// =========================
-// OAuth User Management
-// =========================
 const handleOAuthUser = async (profile, provider) => {
   try {
     let user = await User.findOne({ [`oauth.${provider}.id`]: profile.id });
@@ -43,7 +38,7 @@ const handleOAuthUser = async (profile, provider) => {
       }
     }
 
-    // create new
+   
     const userData = {
       email: profile.emails[0].value,
       name: profile.displayName || profile.username,
@@ -57,9 +52,7 @@ const handleOAuthUser = async (profile, provider) => {
   }
 };
 
-// =========================
-// Passport OAuth Methods
-// =========================
+
 const initiateOAuth = (provider) => {
   const scopes = {
     google: ["profile", "email"],
@@ -126,9 +119,7 @@ const handleOAuthCallback = (provider) => {
   };
 };
 
-// =========================
 // Exported OAuth Routes
-// =========================
 export const googleLogin = initiateOAuth("google");
 export const googleCallback = handleOAuthCallback("google");
 

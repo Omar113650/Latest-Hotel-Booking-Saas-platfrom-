@@ -41,15 +41,15 @@ const BookingSchema = new Schema(
     },
   },
  { timestamps: true ,
-    toJSON: { virtuals: true }, // مهم عشان يظهر virtual لما تعمل JSON
+    toJSON: { virtuals: true },
     toObject: { virtuals: true },
   }
 );
 BookingSchema.virtual("userDetails", {
-  ref: "User",           // الموديل اللي عايز تعمله populate
-  localField: "user",   // الحقل اللي في الـ HotelSchema
-  foreignField: "_id",   // الحقل اللي في الـ User
-  justOne: true          // هيرجع object واحد مش array
+  ref: "User",           
+  localField: "user",   
+  foreignField: "_id",   
+  justOne: true          
 });
 
 BookingSchema.virtual("hotelDetails", {

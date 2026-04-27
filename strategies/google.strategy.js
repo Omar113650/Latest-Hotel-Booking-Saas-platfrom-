@@ -17,7 +17,6 @@ passport.use(
         const { user, accessToken: jwtAccessToken, refreshToken: jwtRefreshToken } =
           await oauthService.handleOAuthUser(profile, 'google');
 
-        // Attach tokens to user object for controller access
         user._oauthTokens = { accessToken: jwtAccessToken, refreshToken: jwtRefreshToken };
         done(null, user);
       } catch (error) {
