@@ -1,219 +1,174 @@
-# Saifna - Summer Rentals Platform
+# Saifna
 
-**Multi-Tenant SaaS Platform for Summer Property Rentals**
+**Hotel Booking and Reservation Platform with Real-Time Communication, Online Payments, OAuth, Push Notifications, and Multi-Role Dashboards**
 
-Saifna is a multi-tenant SaaS platform designed to connect property owners with clients looking for summer rental properties.
+Saifna is a complete hotel booking backend platform built with Node.js and Express.js.
 
-The platform allows multiple property owners to manage their properties, availability, and bookings independently within the same system while maintaining secure tenant-level data isolation.
+The system connects users with hotels and property owners through a complete reservation workflow including hotel discovery, booking management, online payments, authentication, notifications, dashboards, and real-time communication.
 
-Saifna is designed as more than a traditional booking application. It focuses on multi-tenancy, role-based access control, real-time communication, booking concurrency, and scalable backend architecture.
+The platform integrates Stripe for online payments, multiple OAuth providers for social authentication, Cloudinary for media storage, push notifications, scheduled background jobs, and a separate real-time chat server.
 
 ---
 
 ## Table of Contents
 
 1. Project Overview
-2. Problem Statement
-3. Solution Overview
-4. User Roles
-5. Core Features
-6. Tech Stack
-7. Multi-Tenant Architecture
-8. System Architecture
-9. Booking Workflow
-10. Real-Time Notifications
-11. Role-Based Access Control
-12. Payment Verification
-13. Core Entities
-14. Engineering Challenges
-15. Project Structure
-16. Environment Configuration
-17. Installation and Setup
-18. Scalability
-19. Future Enhancements
-20. Use Cases
-21. Author
+2. Core Features
+3. User Roles
+4. Tech Stack
+5. System Architecture
+6. Authentication
+7. Social Authentication
+8. Hotel Management
+9. Booking System
+10. Payment System
+11. Stripe Webhooks
+12. User Dashboard
+13. Hotel Owner Dashboard
+14. Admin Dashboard
+15. Notifications
+16. Push Notifications
+17. Subscriptions
+18. Scheduled Jobs
+19. Real-Time Chat
+20. File Uploads
+21. Email Services
+22. Validation
+23. Error Handling
+24. Project Structure
+25. Docker Architecture
+26. Environment Configuration
+27. Installation
+28. Engineering Highlights
+29. Future Enhancements
+30. Author
 
 ---
 
 # Project Overview
 
-Saifna is a multi-tenant summer property rental platform where property owners can list and manage rental units while clients can discover and book available properties.
+Saifna is a booking platform designed to manage the complete relationship between users, hotels, property owners, reservations, payments, and notifications.
 
-Unlike a traditional rental application, Saifna is designed around a SaaS architecture where multiple property owners operate independently within the same platform.
+The platform handles the complete reservation lifecycle:
 
-Each property owner manages their own:
+```text
+User
+ |
+ v
+Authentication
+ |
+ v
+Discover Hotels
+ |
+ v
+View Hotel
+ |
+ v
+Select Booking Details
+ |
+ v
+Validate Availability
+ |
+ v
+Create Booking
+ |
+ v
+Stripe Payment
+ |
+ v
+Payment Verification
+ |
+ v
+Booking Confirmation
+ |
+ v
+Notifications
+```
 
-- Properties
-- Rental units
-- Availability
-- Bookings
-- Customers
-- Notifications
-- Payment verification
-
-The platform administrator manages the entire SaaS ecosystem.
-
----
-
-# Problem Statement
-
-Summer property rental systems often suffer from several problems:
-
-- Property owners manage bookings manually.
-- Availability information may not be updated correctly.
-- Multiple clients may attempt to book the same property simultaneously.
-- Property owners need separate management environments.
-- Booking updates are not communicated in real time.
-- Access control becomes difficult when multiple types of users exist.
-- Payment and check-in verification require structured workflows.
-- Data from different property owners must remain isolated.
-
-Saifna addresses these problems using a centralized multi-tenant SaaS architecture.
-
----
-
-# Solution Overview
-
-Saifna provides a centralized platform where multiple property owners can manage their rental businesses independently.
-
-The system combines:
-
-- Multi-Tenant SaaS Architecture
-- Property Management
-- Booking Management
-- Availability Management
-- Role-Based Access Control
-- Real-Time Notifications
-- Payment Verification
-- Redis Caching
-- Tenant Data Isolation
-- Role-Based Dashboards
-
-The architecture is designed to support multiple property owners without requiring a separate backend application for every owner.
-
----
-
-# User Roles
-
-Saifna supports multiple user roles with different permissions and responsibilities.
-
-## Super Admin
-
-The Super Admin manages the entire platform.
-
-Responsibilities include:
-
-- Managing property owners
-- Managing users
-- Monitoring properties
-- Monitoring bookings
-- Managing platform configuration
-- Monitoring system activity
-- Managing tenant accounts
-
----
-
-## Property Owner
-
-Property owners manage their rental businesses independently.
-
-They can:
-
-- Create properties
-- Update properties
-- Upload property images
-- Manage rental units
-- Configure availability
-- Manage bookings
-- Review payments
-- Receive real-time notifications
-- Monitor booking activity
-
-Each owner can access only the resources that belong to their tenant.
-
----
-
-## Client
-
-Clients use the platform to discover and book summer properties.
-
-They can:
-
-- Browse available properties
-- View property details
-- Check availability
-- Create bookings
-- View their reservations
-- Receive booking updates
-- Complete payment workflows
-- Manage their profile
+The system also includes dedicated dashboards for different types of users and integrates several external services.
 
 ---
 
 # Core Features
 
-## Property Management
+The platform includes:
 
-Property owners can manage their properties through the platform.
-
-Supported operations include:
-
-- Create properties
-- Update property information
-- Delete properties
-- Upload property images
-- Manage rental units
-- Configure pricing
-- Manage availability
-- View property bookings
-
----
-
-## Booking Management
-
-The booking system manages the complete reservation lifecycle.
-
-The platform handles:
-
-- Booking creation
-- Availability validation
-- Booking updates
-- Booking cancellation
-- Booking history
-- Booking calendar
-- Booking status management
-- Conflict prevention
-
-Before confirming a booking, the system validates that the requested property or unit is still available.
+- User Registration and Login
+- Email Verification
+- Google Authentication
+- GitHub Authentication
+- Microsoft Authentication
+- Hotel Management
+- Hotel Search and Discovery
+- Booking Management
+- Stripe Payment Integration
+- Stripe Webhooks
+- User Dashboard
+- Hotel Owner Dashboard
+- Admin Dashboard
+- Real-Time Notifications
+- Web Push Notifications
+- Firebase Cloud Messaging
+- Subscription Management
+- Scheduled Cron Jobs
+- Real-Time Chat
+- Cloudinary File Storage
+- Email Services
+- Request Validation
+- Centralized Error Handling
+- Docker Support
 
 ---
 
-## Availability Management
+# User Roles
 
-Property availability is managed through a centralized calendar system.
+The platform contains functionality for multiple types of users.
 
-The system can determine whether a property is available for a specific date range.
+## User
 
-Example:
+Users can interact with the booking platform.
 
-```text
-Client selects property
-        |
-        v
-Select check-in and check-out dates
-        |
-        v
-Check availability
-        |
-        v
-Validate conflicting bookings
-        |
-        v
-Create reservation
-```
+Typical functionality includes:
 
-This prevents clients from booking unavailable units.
+- Create an account
+- Login
+- Use social authentication
+- Browse hotels
+- View hotel information
+- Create bookings
+- Complete payments
+- View booking information
+- Receive notifications
+- Access their dashboard
+
+---
+
+## Hotel Owner
+
+Hotel owners have a dedicated dashboard.
+
+Their functionality can include:
+
+- Manage hotel information
+- Monitor hotel activity
+- Monitor bookings
+- Access hotel-related statistics
+- Manage hotel resources
+
+---
+
+## Administrator
+
+Administrators have access to a dedicated platform dashboard.
+
+Administrative functionality can include:
+
+- Monitor users
+- Monitor hotels
+- Monitor bookings
+- Manage platform resources
+- Access system statistics
+- Monitor platform activity
 
 ---
 
@@ -221,593 +176,1286 @@ This prevents clients from booking unavailable units.
 
 | Layer | Technology |
 |---|---|
-| Backend | NestJS |
-| Language | TypeScript |
 | Runtime | Node.js |
-| Database | PostgreSQL |
-| ORM | Prisma |
-| Real-Time Communication | Socket.IO |
-| Authentication | JWT |
-| Authorization | RBAC |
-| Caching | Redis |
-| Multi-Tenancy | Tenant-Level Data Isolation |
-| Architecture | Modular / Clean Architecture |
-
----
-
-# Multi-Tenant Architecture
-
-One of the main architectural concepts behind Saifna is multi-tenancy.
-
-Instead of deploying a separate application for every property owner, all tenants use the same backend infrastructure.
-
-Conceptually:
-
-```text
-                     Saifna Platform
-                           |
-            --------------------------------
-            |              |               |
-            v              v               v
-        Owner A         Owner B         Owner C
-            |              |               |
-            v              v               v
-      Properties A    Properties B    Properties C
-            |              |               |
-            v              v               v
-       Bookings A      Bookings B      Bookings C
-```
-
-Although all owners use the same application, each tenant can access only their own data.
-
----
-
-# Tenant Data Isolation
-
-Tenant isolation is critical in a multi-tenant SaaS application.
-
-The backend ensures that requests are scoped to the authenticated tenant.
-
-Conceptually:
-
-```text
-Authenticated User
-        |
-        v
-Extract User Identity
-        |
-        v
-Determine Role / Tenant
-        |
-        v
-Authorization Check
-        |
-        v
-Apply Tenant Scope
-        |
-        v
-Database Query
-```
-
-For example, an owner requesting properties should receive only properties associated with their tenant.
-
-Conceptually:
-
-```typescript
-const properties = await prisma.property.findMany({
-  where: {
-    ownerId: currentUser.id,
-  },
-});
-```
-
-Tenant filtering must be enforced on the backend rather than trusting client-side filtering.
+| Backend Framework | Express.js |
+| Database | MongoDB |
+| ODM | Mongoose |
+| Authentication | Token-Based Authentication |
+| OAuth | Passport.js |
+| Google OAuth | Passport Google Strategy |
+| GitHub OAuth | Passport GitHub Strategy |
+| Microsoft OAuth | Passport Microsoft Strategy |
+| Payments | Stripe |
+| Payment Events | Stripe Webhooks |
+| File Upload | Multer |
+| Cloud Storage | Cloudinary |
+| Notifications | Web Push / Firebase |
+| Real-Time Communication | WebSocket / Socket Server |
+| Scheduled Tasks | Cron Jobs |
+| Email | Email Service |
+| Containerization | Docker |
+| Orchestration | Docker Compose |
+| Deployment Configuration | Vercel |
+| Architecture | Route / Controller / Model / Service |
 
 ---
 
 # System Architecture
 
-The high-level architecture follows this structure:
+The backend follows a layered Express architecture.
 
 ```text
-                         Client Applications
+                        Client Applications
                                 |
                                 v
-                         NestJS REST API
+                           Express API
                                 |
-              -------------------------------------
-              |                 |                 |
-              v                 v                 v
-       Authentication      Business Logic      WebSocket
-              |                 |                 |
-              v                 v                 v
-            RBAC          Tenant Isolation    Socket.IO
-                                |
-                    -------------------------
-                    |                       |
-                    v                       v
-                PostgreSQL                Redis
-                    |
-                    v
-                  Prisma
-```
-
-The backend acts as the central layer responsible for authentication, authorization, tenant isolation, booking logic, and communication with infrastructure services.
-
----
-
-# Booking Workflow
-
-A typical booking request follows this workflow:
-
-```text
-Client
-  |
-  v
-Select Property
-  |
-  v
-Select Date Range
-  |
-  v
-Check Availability
-  |
-  v
-Validate Booking Request
-  |
-  v
-Prevent Booking Conflict
-  |
-  v
-Create Booking
-  |
-  v
-Notify Property Owner
-  |
-  v
-Payment / Verification
-  |
-  v
-Booking Confirmation
-```
-
-This workflow helps ensure that booking operations remain consistent.
-
----
-
-# Booking State Management
-
-Bookings can move through multiple states during their lifecycle.
-
-Example:
-
-```text
-PENDING
-   |
-   v
-AWAITING_PAYMENT
-   |
-   v
-CONFIRMED
-   |
-   v
-CHECKED_IN
-   |
-   v
-COMPLETED
-```
-
-Alternative transitions may include:
-
-```text
-PENDING
-   |
-   v
-CANCELLED
-```
-
-or:
-
-```text
-AWAITING_PAYMENT
-   |
-   v
-PAYMENT_FAILED
-```
-
-Using explicit booking states makes the workflow easier to manage and prevents invalid transitions.
-
----
-
-# Preventing Race Conditions
-
-One of the main engineering challenges in booking systems is preventing two users from reserving the same property for overlapping dates.
-
-Consider the following situation:
-
-```text
-User A checks availability
-Property is available
-
-User B checks availability
-Property is available
-
-User A creates booking
-User B creates booking
-```
-
-Without proper concurrency handling, both requests could create reservations for the same unit.
-
-Saifna's booking architecture is designed to validate availability before creating reservations and can be extended with database transactions and locking mechanisms for stronger concurrency guarantees.
-
-Possible strategies include:
-
-- Database transactions
-- Row-level locking
-- Serializable transactions
-- Unique constraints where applicable
-- Optimistic concurrency control
-
----
-
-# Real-Time Notifications
-
-Saifna uses Socket.IO to provide real-time communication between clients and property owners.
-
-Example events include:
-
-- New booking created
-- Booking confirmed
-- Booking cancelled
-- Payment received
-- Payment verified
-- Check-in completed
-- Property availability changed
-
-Architecture:
-
-```text
-Client
-  |
-  v
-NestJS API
-  |
-  v
-Booking Service
-  |
-  v
-Notification Service
-  |
-  v
-Socket.IO Gateway
-  |
-  v
-Connected User
-```
-
-This allows important booking updates to reach users without requiring continuous polling.
-
----
-
-# Role-Based Access Control
-
-Saifna uses Role-Based Access Control to protect platform resources.
-
-Roles include:
-
-```text
-SUPER_ADMIN
-PROPERTY_OWNER
-CLIENT
-```
-
-Permissions can be applied at the API level.
-
-Example:
-
-```text
-POST /properties
-PROPERTY_OWNER
-
-DELETE /properties/:id
-PROPERTY_OWNER
-
-GET /admin/users
-SUPER_ADMIN
-
-POST /bookings
-CLIENT
-```
-
-Authentication determines who the user is, while authorization determines what the user is allowed to do.
-
----
-
-# Authentication Flow
-
-A typical authentication flow follows:
-
-```text
-User Login
-    |
-    v
-Validate Credentials
-    |
-    v
-Generate JWT
-    |
-    v
-Return Token
-    |
-    v
-Client Sends Token
-    |
-    v
-Authentication Guard
-    |
-    v
-Validate User
-    |
-    v
-RBAC Authorization
-    |
-    v
-Access Resource
-```
-
-This ensures that protected endpoints are accessible only to authenticated and authorized users.
-
----
-
-# Payment Verification Workflow
-
-Saifna supports a structured payment verification workflow.
-
-A typical workflow may look like:
-
-```text
-Booking Created
-      |
-      v
-Payment Required
-      |
-      v
-Client Completes Payment
-      |
-      v
-Payment Verification
-      |
-      v
-Booking Confirmed
-      |
-      v
-Check-In
-```
-
-This separates booking creation from payment confirmation and allows the system to handle failed or pending payments safely.
-
----
-
-# Core Entities
-
-The main entities in the platform include:
-
-## User
-
-Represents platform users such as administrators, property owners, and clients.
-
-## Property
-
-Represents a property listed by an owner.
-
-## Unit
-
-Represents an individual rentable unit within a property.
-
-## Booking
-
-Represents a reservation created by a client.
-
-## Payment
-
-Stores payment-related information associated with bookings.
-
-## Availability
-
-Represents the available rental periods for properties or units.
-
-## Notification
-
-Stores notifications generated by platform activities.
-
-## Tenant
-
-Represents the logical owner or organization boundary used for multi-tenant isolation.
-
----
-
-# Entity Relationships
-
-A simplified relationship model:
-
-```text
-Tenant
-  |
-  +---- Users
-  |
-  +---- Properties
-          |
-          +---- Units
-                  |
-                  +---- Availability
-                  |
-                  +---- Bookings
-                          |
-                          +---- Payments
-
-User
-  |
-  +---- Bookings
-  |
-  +---- Notifications
-```
-
-The exact database structure may vary depending on the implementation strategy.
-
----
-
-# Redis Caching
-
-Redis can be used to reduce unnecessary database queries and improve response times.
-
-Potential cached data includes:
-
-- Property listings
-- Property details
-- Availability information
-- Frequently accessed platform configuration
-- Dashboard statistics
-
-Example:
-
-```text
-Request Property
-      |
-      v
-Check Redis
-      |
-   Cache Hit?
-    /     \
-  Yes      No
-   |        |
-   v        v
-Return     PostgreSQL
-Cache        |
-             v
-        Store in Redis
+             -----------------------------------------
+             |                  |                    |
+             v                  v                    v
+       Authentication       Validation           Middleware
              |
              v
-        Return Result
+           Routes
+             |
+             v
+        Controllers
+             |
+             v
+       Business Logic
+             |
+       -------------------------------
+       |             |               |
+       v             v               v
+    MongoDB       Services      External Services
+       |                             |
+       v                ---------------------------
+    Mongoose            |          |             |
+                        v          v             v
+                     Stripe    Cloudinary    OAuth Providers
+                                      |
+                               Notifications
 ```
 
-Cache invalidation should occur whenever the underlying data changes.
+The project separates routing, request processing, data models, external integrations, and shared utilities.
 
 ---
 
-# Engineering Challenges
+# Authentication
 
-Saifna addresses several backend engineering challenges beyond standard CRUD operations.
+Authentication functionality is implemented through:
 
-## Multi-Tenant Data Isolation
+```text
+controller/
+    AuthController.js
 
-Each property owner must access only their own resources.
+routes/
+    AuthRoute.js
 
-## Booking Concurrency
+middleware/
+    VerifyToken.js
 
-The system must prevent overlapping or duplicate reservations.
+model/
+    user.js
+    Token.js
+    VerificationToken.js
+```
 
-## Role-Based Authorization
+A typical authentication flow:
 
-Different users require different permissions across the platform.
+```text
+Register
+   |
+   v
+Validate Request
+   |
+   v
+Create User
+   |
+   v
+Generate Verification Token
+   |
+   v
+Verify Account
+   |
+   v
+Login
+   |
+   v
+Generate Authentication Token
+   |
+   v
+Access Protected Resources
+```
 
-## Real-Time Communication
+Authentication middleware protects routes that require an authenticated user.
 
-Booking updates should reach users immediately.
+---
 
-## Availability Management
+# Token Management
 
-The system must calculate property availability based on existing reservations.
+The project contains a dedicated token service:
 
-## Payment Verification
+```text
+service/
+    TokenServices.js
+```
 
-Payment states must remain synchronized with booking states.
+Token-related models include:
 
-## Tenant-Aware Business Logic
+```text
+model/
+    Token.js
+    VerificationToken.js
+```
 
-Business operations must always respect tenant boundaries.
+Separating token operations into a service makes authentication logic easier to maintain.
 
-## Scalable Architecture
+Conceptually:
 
-The system should support increasing numbers of users, properties, tenants, and bookings.
+```text
+Authentication Request
+        |
+        v
+Token Service
+        |
+        v
+Generate / Validate Token
+        |
+        v
+Authentication Result
+```
+
+---
+
+# Social Authentication
+
+Saifna supports multiple OAuth authentication providers.
+
+Strategies include:
+
+```text
+strategies/
+    google.strategy.js
+    github.strategy.js
+    microsoft.strategy.js
+```
+
+OAuth functionality is also handled through:
+
+```text
+controller/
+    OAuthController.js
+
+config/
+    passport.js
+```
+
+Supported providers include:
+
+- Google
+- GitHub
+- Microsoft
+
+---
+
+# OAuth Flow
+
+The social authentication workflow follows:
+
+```text
+User
+ |
+ v
+Select OAuth Provider
+ |
+ +---- Google
+ |
+ +---- GitHub
+ |
+ +---- Microsoft
+ |
+ v
+Passport Strategy
+ |
+ v
+External Provider
+ |
+ v
+User Authorization
+ |
+ v
+OAuth Callback
+ |
+ v
+Find / Create User
+ |
+ v
+Generate Application Token
+ |
+ v
+Authenticated User
+```
+
+This allows users to access the platform without creating a separate password-based account.
+
+---
+
+# Hotel Management
+
+Hotels represent one of the primary business entities in the platform.
+
+Implementation includes:
+
+```text
+controller/
+    HotelController.js
+
+model/
+    Hotel.js
+
+routes/
+    hotelRoute.js
+```
+
+Hotel functionality can include:
+
+- Create hotel records
+- Retrieve hotels
+- Update hotel information
+- Manage hotel details
+- Upload hotel media
+- Display hotels to users
+- Connect hotels with bookings
+
+---
+
+# Home Page
+
+The platform contains dedicated home page logic:
+
+```text
+controller/
+    HomePage.js
+
+routes/
+    homeRoute.js
+```
+
+This allows public-facing data to be retrieved separately from administrative and booking functionality.
+
+The home page can serve resources such as:
+
+- Available hotels
+- Featured destinations
+- Recommended properties
+- Platform content
+
+---
+
+# Booking System
+
+The booking module manages reservations between users and hotels.
+
+Implementation:
+
+```text
+controller/
+    BookingController.js
+
+model/
+    Booking.js
+
+routes/
+    BookRoute.js
+```
+
+Booking validation is handled through:
+
+```text
+Validation/
+    BookValidation.js
+```
+
+A typical booking flow:
+
+```text
+User
+ |
+ v
+Select Hotel
+ |
+ v
+Select Booking Details
+ |
+ v
+Validate Request
+ |
+ v
+Check Hotel
+ |
+ v
+Create Booking
+ |
+ v
+Process Payment
+ |
+ v
+Confirm Booking
+ |
+ v
+Notify User
+```
+
+---
+
+# Booking Validation
+
+Booking requests should be validated before creating reservations.
+
+The project contains dedicated booking validation:
+
+```text
+Validation/
+    BookValidation.js
+```
+
+A request may pass through:
+
+```text
+Booking Request
+      |
+      v
+Schema Validation
+      |
+      v
+Authentication
+      |
+      v
+Hotel Validation
+      |
+      v
+Booking Controller
+      |
+      v
+Create Reservation
+```
+
+This keeps invalid data away from the booking business logic.
+
+---
+
+# Payment System
+
+The platform integrates Stripe for online payments.
+
+Relevant files include:
+
+```text
+controller/
+    StripeController.js
+
+model/
+    Stripe.js
+
+routes/
+    StripeRoute.js
+```
+
+A typical payment flow:
+
+```text
+Booking
+   |
+   v
+Create Payment
+   |
+   v
+Stripe Controller
+   |
+   v
+Stripe API
+   |
+   v
+Customer Payment
+   |
+   v
+Payment Result
+```
+
+The backend should remain responsible for validating the final payment state.
+
+---
+
+# Stripe Webhooks
+
+Saifna contains dedicated webhook handling.
+
+Implementation:
+
+```text
+controller/
+    webhookController.js
+
+routes/
+    stripeWebhook.js
+    webhookRoute.js
+```
+
+Stripe can communicate payment events directly to the backend.
+
+```text
+Customer
+   |
+   v
+Stripe Checkout
+   |
+   v
+Stripe
+   |
+   v
+Webhook Event
+   |
+   v
+Webhook Controller
+   |
+   v
+Verify Event
+   |
+   v
+Update Payment / Booking
+```
+
+This prevents the system from depending only on frontend payment confirmation.
+
+---
+
+# Why Payment Webhooks Matter
+
+Consider:
+
+```text
+Payment Successful
+       |
+       v
+User Closes Browser
+```
+
+If booking confirmation depends only on the frontend redirect, the backend may not receive the final result.
+
+With webhooks:
+
+```text
+Stripe
+  |
+  v
+Backend Webhook
+  |
+  v
+Update Booking
+```
+
+Payment processing can continue independently of the user's browser session.
+
+---
+
+# User Dashboard
+
+The platform contains a dedicated user dashboard.
+
+Implementation:
+
+```text
+controller/
+    UserDashboard.js
+
+routes/
+    UserDashboardRoute.js
+```
+
+The dashboard provides user-specific platform information.
+
+It can include:
+
+- User information
+- Booking information
+- Payment information
+- Notifications
+- Account activity
+
+---
+
+# Hotel Owner Dashboard
+
+Hotel owners have a dedicated dashboard.
+
+Implementation:
+
+```text
+controller/
+    HotelOwnerDashboard.js
+
+routes/
+    HotelOwnerRoutes.js
+```
+
+This separates hotel-owner functionality from normal user functionality.
+
+The dashboard can provide:
+
+- Hotel information
+- Booking activity
+- Customer reservations
+- Hotel statistics
+- Management functionality
+
+---
+
+# Admin Dashboard
+
+Administrative functionality is handled through:
+
+```text
+controller/
+    AdminDashboard.js
+
+routes/
+    adminRoute.js
+```
+
+The Admin Dashboard provides centralized platform management.
+
+Possible dashboard information includes:
+
+- Total users
+- Total hotels
+- Total bookings
+- Platform activity
+- Payment information
+- System statistics
+
+---
+
+# Notification System
+
+Saifna includes a dedicated notification architecture.
+
+Relevant files include:
+
+```text
+controller/
+    notificationcontroller.js
+
+model/
+    Notification.model.js
+
+service/
+    notificationService.js
+
+routes/
+    notification.js
+```
+
+Notifications can be generated when important application events occur.
+
+Examples include:
+
+- Booking created
+- Booking updated
+- Payment completed
+- Booking confirmed
+- Account activity
+- Platform announcements
+
+---
+
+# Notification Architecture
+
+```text
+Application Event
+       |
+       v
+Notification Service
+       |
+       v
+Create Notification
+       |
+       v
+Notification Storage
+       |
+       v
+Send Notification
+       |
+       v
+User
+```
+
+Separating notification logic into a service prevents controllers from containing notification delivery logic.
+
+---
+
+# Push Notifications
+
+The platform contains dedicated push notification functionality.
+
+Relevant files:
+
+```text
+config/
+    webpush.js
+
+utils/
+    pushNotification.js
+    sendNotificationToUser.js
+```
+
+The project also contains web push client resources:
+
+```text
+public/
+    service-worker.js
+```
+
+A push notification flow can follow:
+
+```text
+Application Event
+       |
+       v
+Notification Service
+       |
+       v
+Push Notification
+       |
+       v
+Web Push Provider
+       |
+       v
+Service Worker
+       |
+       v
+User Device
+```
+
+Push notifications allow users to receive important updates even when they are not actively viewing the application.
+
+---
+
+# Firebase Notifications
+
+The project contains Firebase messaging resources:
+
+```text
+web-fcm/
+    firebase-messaging-sw.js
+    firebaseWebInit.js
+    notifcation.html
+```
+
+This provides infrastructure for Firebase Cloud Messaging integration.
+
+Conceptually:
+
+```text
+Backend
+   |
+   v
+Firebase Cloud Messaging
+   |
+   v
+Firebase Service Worker
+   |
+   v
+Browser
+   |
+   v
+Notification
+```
+
+---
+
+# Push Notification Subscriptions
+
+Push subscriptions are managed through:
+
+```text
+controller/
+    subscriptioncontroller.js
+
+model/
+    Subscription.js
+
+routes/
+    subscription.js
+```
+
+A typical subscription flow:
+
+```text
+Browser
+   |
+   v
+Request Notification Permission
+   |
+   v
+Create Push Subscription
+   |
+   v
+Send Subscription to Backend
+   |
+   v
+Store Subscription
+   |
+   v
+Use Subscription for Future Notifications
+```
+
+This allows the backend to maintain notification endpoints for registered devices.
+
+---
+
+# Scheduled Jobs
+
+The project contains scheduled background functionality:
+
+```text
+cron/
+    weeklyJob.js
+```
+
+Scheduled jobs allow the application to execute tasks automatically without requiring an HTTP request.
+
+Conceptually:
+
+```text
+Cron Scheduler
+      |
+      v
+Weekly Job
+      |
+      v
+Retrieve Required Data
+      |
+      v
+Execute Business Logic
+      |
+      v
+Create / Send Notifications
+```
+
+Scheduled jobs can be useful for operations such as reminders and periodic notifications.
+
+---
+
+# Cron Notification Storage
+
+The project includes:
+
+```text
+model/
+    NotificationForCronJob.js
+```
+
+This indicates that scheduled notification operations have dedicated persistence or tracking.
+
+This helps separate scheduled notification data from standard application notifications.
+
+---
+
+# Real-Time Chat
+
+Saifna contains a dedicated chat server:
+
+```text
+chatServer.js
+```
+
+There is also:
+
+```text
+model/
+    Message.js
+```
+
+This provides infrastructure for real-time communication.
+
+Conceptually:
+
+```text
+User A
+  |
+  v
+Chat Server
+  |
+  v
+WebSocket Connection
+  |
+  v
+User B
+```
+
+Messages can also be stored through the Message model.
+
+---
+
+# Chat Architecture
+
+The project separates the main backend and chat server.
+
+```text
+                 Client
+                   |
+          -------------------
+          |                 |
+          v                 v
+     Main Backend       Chat Server
+          |                 |
+          v                 v
+       MongoDB           Messages
+```
+
+This separation is useful because real-time chat traffic has different characteristics from normal REST API traffic.
+
+---
+
+# File Upload Management
+
+File upload utilities include:
+
+```text
+utils/
+    multer.js
+    Cloudinary.js
+```
+
+Multer handles incoming multipart files while Cloudinary provides cloud-based storage.
+
+```text
+Client
+  |
+  v
+Upload File
+  |
+  v
+Multer
+  |
+  v
+Validate File
+  |
+  v
+Cloudinary
+  |
+  v
+Cloud URL
+  |
+  v
+Database
+```
+
+This can be used for hotel images and other platform media.
+
+---
+
+# Email Services
+
+Email functionality is centralized through:
+
+```text
+utils/
+    emailServices.js
+```
+
+Email can support workflows such as:
+
+- Account verification
+- Authentication
+- Booking confirmation
+- Booking updates
+- Payment notifications
+- Account notifications
+
+Keeping email functionality centralized prevents duplication across controllers.
+
+---
+
+# Validation
+
+The project contains dedicated validation schemas:
+
+```text
+Validation/
+    BookValidation.js
+    HotelValidation.js
+    TreasuretValidation.js
+    UserValidation.js
+```
+
+There is also validation middleware:
+
+```text
+middleware/
+    Vaildate.js
+    validateId.js
+```
+
+The request pipeline can follow:
+
+```text
+HTTP Request
+     |
+     v
+Schema Validation
+     |
+     v
+ID Validation
+     |
+     v
+Authentication
+     |
+     v
+Controller
+```
+
+This keeps controllers focused on application logic.
+
+---
+
+# Error Handling
+
+The project includes centralized error infrastructure:
+
+```text
+middleware/
+    error.js
+
+utils/
+    AppError.js
+    ApiResponse.js
+```
+
+`AppError` can provide standardized application errors while `ApiResponse` can help maintain consistent API response structures.
+
+A typical flow:
+
+```text
+Controller / Service
+        |
+        v
+Error Occurs
+        |
+        v
+AppError
+        |
+        v
+Error Middleware
+        |
+        v
+Standardized Response
+```
+
+Common HTTP responses include:
+
+```text
+400 Bad Request
+401 Unauthorized
+403 Forbidden
+404 Not Found
+409 Conflict
+500 Internal Server Error
+```
+
+---
+
+# Database Models
+
+The project contains the following major models:
+
+```text
+Booking.js
+Hotel.js
+LoginGoogle.js
+Message.js
+Notification.model.js
+NotificationForCronJob.js
+Stripe.js
+Subscription.js
+Token.js
+TreasuretoChoose.js
+VerificationToken.js
+user.js
+```
+
+A simplified domain relationship:
+
+```text
+User
+ |
+ +---- Bookings
+ |
+ +---- Payments
+ |
+ +---- Messages
+ |
+ +---- Notifications
+ |
+ +---- Push Subscriptions
+
+
+Hotel
+ |
+ +---- Bookings
+
+
+Booking
+ |
+ +---- User
+ |
+ +---- Hotel
+ |
+ +---- Payment
+```
 
 ---
 
 # Project Structure
 
-A possible NestJS project structure:
+The actual project structure follows:
 
 ```text
-src/
-|
-|-- auth/
-|   |-- guards/
-|   |-- strategies/
-|   |-- decorators/
-|   |-- auth.controller.ts
-|   |-- auth.service.ts
-|   `-- auth.module.ts
-|
-|-- users/
-|
-|-- tenants/
-|
-|-- properties/
-|   |-- dto/
-|   |-- entities/
-|   |-- properties.controller.ts
-|   |-- properties.service.ts
-|   `-- properties.module.ts
-|
-|-- bookings/
-|   |-- dto/
-|   |-- bookings.controller.ts
-|   |-- bookings.service.ts
-|   `-- bookings.module.ts
-|
-|-- payments/
-|
-|-- notifications/
-|
-|-- gateways/
-|
-|-- common/
-|   |-- guards/
-|   |-- decorators/
-|   |-- interceptors/
-|   `-- filters/
-|
-|-- prisma/
-|
-|-- redis/
-|
-|-- app.module.ts
-`-- main.ts
+Validation/
+|-- BookValidation.js
+|-- HotelValidation.js
+|-- TreasuretValidation.js
+`-- UserValidation.js
+
+config/
+|-- connectDB.js
+|-- passport.js
+`-- webpush.js
+
+controller/
+|-- AdminDashboard.js
+|-- AuthController.js
+|-- BookingController.js
+|-- HomePage.js
+|-- HotelController.js
+|-- HotelOwnerDashboard.js
+|-- OAuthController.js
+|-- StripeController.js
+|-- UserDashboard.js
+|-- notificationcontroller.js
+|-- subscriptioncontroller.js
+`-- webhookController.js
+
+cron/
+`-- weeklyJob.js
+
+middleware/
+|-- Vaildate.js
+|-- VerifyToken.js
+|-- error.js
+`-- validateId.js
+
+model/
+|-- Booking.js
+|-- Hotel.js
+|-- LoginGoogle.js
+|-- Message.js
+|-- Notification.model.js
+|-- NotificationForCronJob.js
+|-- Stripe.js
+|-- Subscription.js
+|-- Token.js
+|-- TreasuretoChoose.js
+|-- VerificationToken.js
+`-- user.js
+
+routes/
+|-- AuthRoute.js
+|-- BookRoute.js
+|-- HotelOwnerRoutes.js
+|-- StripeRoute.js
+|-- UserDashboardRoute.js
+|-- adminRoute.js
+|-- homeRoute.js
+|-- hotelRoute.js
+|-- notification.js
+|-- stripeWebhook.js
+|-- subscription.js
+`-- webhookRoute.js
+
+service/
+|-- TokenServices.js
+`-- notificationService.js
+
+strategies/
+|-- github.strategy.js
+|-- google.strategy.js
+`-- microsoft.strategy.js
+
+utils/
+|-- ApiResponse.js
+|-- AppError.js
+|-- Cloudinary.js
+|-- emailServices.js
+|-- multer.js
+|-- pushNotification.js
+`-- sendNotificationToUser.js
+
+public/
+|-- admin.html
+|-- client.html
+|-- frontend.js
+|-- service-worker.js
+|-- so-proud-notification.mp3
+`-- style.css
+
+web-fcm/
+|-- firebase-messaging-sw.js
+|-- firebaseWebInit.js
+`-- notifcation.html
+
+Dockerfile.backend
+Dockerfile.chat
+docker-compose.yml
+chatServer.js
+client.js
+index.js
+test-socket.js
+vercel.json
+package.json
 ```
 
-This modular structure keeps business domains separated and makes the application easier to maintain and scale.
+---
+
+# Application Request Flow
+
+The standard REST request flow follows:
+
+```text
+Client
+  |
+  v
+Route
+  |
+  v
+Validation
+  |
+  v
+Authentication
+  |
+  v
+Controller
+  |
+  v
+Service / Model
+  |
+  v
+Database / External Service
+  |
+  v
+Response
+```
+
+---
+
+# Docker Architecture
+
+The project includes containerization support:
+
+```text
+Dockerfile.backend
+Dockerfile.chat
+docker-compose.yml
+```
+
+The backend and chat server can run as separate containers.
+
+Conceptually:
+
+```text
+                    Docker Compose
+                         |
+             -------------------------
+             |                       |
+             v                       v
+      Backend Container        Chat Container
+             |                       |
+             v                       v
+        Express API             Chat Server
+             |
+             v
+          MongoDB
+```
+
+This separation allows the REST backend and real-time chat service to run independently.
+
+---
+
+# Why Separate the Chat Server?
+
+HTTP API traffic and WebSocket traffic have different characteristics.
+
+The main backend handles operations such as:
+
+```text
+Authentication
+Hotels
+Bookings
+Payments
+Dashboards
+Notifications
+```
+
+The chat server focuses on:
+
+```text
+Connections
+Messages
+Real-Time Events
+```
+
+Separating them improves architectural flexibility and allows them to be scaled independently in the future.
 
 ---
 
 # Environment Configuration
 
-Create a `.env` file in the root directory.
+The exact variable names should match the implementation.
 
-Example:
+The project may require configuration similar to:
 
 ```env
-DATABASE_URL=postgresql://username:password@localhost:5432/saifna
+PORT=3000
+
+MONGODB_URI=your_mongodb_connection_string
 
 JWT_SECRET=your_jwt_secret
 
-REDIS_HOST=localhost
-REDIS_PORT=6379
+GOOGLE_CLIENT_ID=your_google_client_id
+GOOGLE_CLIENT_SECRET=your_google_client_secret
 
-PORT=3000
+GITHUB_CLIENT_ID=your_github_client_id
+GITHUB_CLIENT_SECRET=your_github_client_secret
+
+MICROSOFT_CLIENT_ID=your_microsoft_client_id
+MICROSOFT_CLIENT_SECRET=your_microsoft_client_secret
+
+STRIPE_SECRET_KEY=your_stripe_secret_key
+STRIPE_WEBHOOK_SECRET=your_stripe_webhook_secret
+
+CLOUDINARY_CLOUD_NAME=your_cloudinary_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+EMAIL_USER=your_email
+EMAIL_PASSWORD=your_email_password
+
+WEB_PUSH_PUBLIC_KEY=your_public_key
+WEB_PUSH_PRIVATE_KEY=your_private_key
 ```
 
-Never commit production secrets or credentials to source control.
-
-Add `.env` to `.gitignore`.
+Never commit real credentials, private keys, API keys, or secrets to source control.
 
 ---
 
@@ -815,33 +1463,25 @@ Add `.env` to `.gitignore`.
 
 ## Requirements
 
-Make sure the following tools are installed:
+Install:
 
-- Node.js 18 or later
-- PostgreSQL
-- Redis
-- npm or Yarn
+- Node.js
+- MongoDB
+- npm
+- Docker and Docker Compose if running containers
 
 ---
 
-## Clone the Repository
+## Clone Repository
 
 ```bash
-git clone https://github.com/yourusername/saifna.git
-cd saifna
+git clone <repository-url>
+cd <project-directory>
 ```
 
 ---
 
 ## Install Dependencies
-
-Using Yarn:
-
-```bash
-yarn install
-```
-
-Or using npm:
 
 ```bash
 npm install
@@ -849,213 +1489,207 @@ npm install
 
 ---
 
-## Configure Environment Variables
+## Configure Environment
 
-Copy the example environment file:
+Create the required `.env` file and configure:
 
-```bash
-cp .env.example .env
-```
-
-Update the required environment variables.
-
----
-
-## Generate Prisma Client
-
-```bash
-npx prisma generate
-```
+- Database
+- Authentication
+- OAuth providers
+- Stripe
+- Cloudinary
+- Email
+- Push notifications
 
 ---
 
-## Run Database Migrations
+## Start Main Backend
 
-Using Yarn:
-
-```bash
-yarn prisma migrate dev
-```
-
-Or:
-
-```bash
-npx prisma migrate dev
-```
-
----
-
-## Start Development Server
-
-Using Yarn:
-
-```bash
-yarn start:dev
-```
-
-Or:
-
-```bash
-npm run start:dev
-```
-
-The application will run on the configured port.
+Use the script configured in `package.json`.
 
 For example:
 
-```text
-http://localhost:3000
+```bash
+npm start
+```
+
+or:
+
+```bash
+npm run dev
 ```
 
 ---
 
-# Scalability
+## Run with Docker
 
-Saifna is designed with future scalability in mind.
+The project includes Docker Compose configuration.
 
-A larger production architecture could evolve into:
-
-```text
-                     Load Balancer
-                          |
-              -------------------------
-              |                       |
-              v                       v
-        NestJS Instance         NestJS Instance
-              |                       |
-              -----------+-------------
-                         |
-              -------------------------
-              |                       |
-              v                       v
-          PostgreSQL                Redis
-              |
-              v
-        Read Replicas
+```bash
+docker compose up --build
 ```
 
-Real-time communication can also be scaled across multiple backend instances using a Redis adapter for Socket.IO.
+This can start the configured backend and chat services.
 
 ---
 
-# Future Enhancements
+# Deployment
 
-Future versions of Saifna could include:
+The project includes:
 
-## Payment Gateway Integration
+```text
+vercel.json
+```
 
-Integration with payment providers such as:
+for Vercel-specific deployment configuration.
 
-- Stripe
-- Paymob
-- PayPal
-
-## Advanced Search
-
-Search properties using:
-
-- Location
-- Price range
-- Number of guests
-- Property type
-- Amenities
-- Availability dates
-
-## Property Reviews
-
-Clients could rate and review properties after completing their stays.
-
-## Recommendation Engine
-
-The platform could recommend properties based on:
-
-- Previous bookings
-- User preferences
-- Location
-- Budget
-- Property categories
-
-## Analytics Dashboard
-
-Property owners could monitor:
-
-- Total bookings
-- Occupancy rate
-- Revenue
-- Popular properties
-- Cancellation rate
-- Monthly performance
-
-## Background Jobs
-
-Queues can be introduced for:
-
-- Email notifications
-- Booking reminders
-- Payment processing
-- Report generation
-- Expired booking cleanup
-
-## Observability
-
-Production monitoring could include:
-
-- Structured logging
-- Error tracking
-- API performance metrics
-- Database monitoring
-- Health checks
-- Readiness checks
-- Runtime monitoring
+Docker configuration is also available for environments that support container-based deployments.
 
 ---
 
-# Use Cases
+# Engineering Highlights
 
-## Property Owner
+## Complete Booking Workflow
 
-A property owner can register on the platform, add rental properties, configure availability, manage bookings, and receive real-time booking notifications.
+The platform connects hotel discovery, booking, payment, and notifications into one complete workflow.
 
-## Client
+## Multi-Provider OAuth
 
-A client can browse available properties, select a date range, create a reservation, complete payment, and receive booking updates.
+The authentication architecture supports Google, GitHub, and Microsoft strategies.
 
-## Platform Administrator
+## Payment Webhooks
 
-The administrator can manage tenants, monitor platform activity, control users, and oversee the entire SaaS platform.
+Stripe webhook handling provides server-to-server payment verification.
+
+## Push Notifications
+
+Web Push and Firebase infrastructure allow notifications to reach user devices outside normal API requests.
+
+## Notification Architecture
+
+Notification controllers, services, models, and push utilities are separated into dedicated components.
+
+## Scheduled Background Work
+
+Cron jobs allow periodic operations to run independently from incoming HTTP requests.
+
+## Separate Real-Time Chat Service
+
+The project separates the standard REST backend from the real-time chat server.
+
+## Containerization
+
+Separate Dockerfiles for the backend and chat service allow independent container execution.
+
+## Multi-Role Dashboards
+
+Users, hotel owners, and administrators have separate dashboard functionality.
+
+## Centralized Validation
+
+Dedicated schemas and middleware validate incoming requests before business logic executes.
+
+## Centralized Error Handling
+
+AppError, ApiResponse, and error middleware provide reusable application-level response handling.
 
 ---
 
 # Security Considerations
 
-The platform should enforce security at multiple levels.
+Important security areas include:
 
-Important security measures include:
+- Token validation
+- Protected routes
+- OAuth callback validation
+- Request validation
+- ID validation
+- Secure password handling
+- Stripe webhook signature verification
+- Secure push subscription handling
+- File upload validation
+- Environment variable protection
+- Role and resource authorization
 
-- JWT validation
-- Password hashing
-- Role-Based Access Control
-- Tenant-level authorization
-- Input validation
-- Rate limiting
-- Secure HTTP headers
-- CORS configuration
-- SQL injection protection through Prisma
-- Secure environment variable management
+Payment results should always be verified on the backend rather than trusted from the frontend.
 
-Multi-tenant authorization must always be enforced on the backend.
+---
 
-A user should never gain access to another tenant's resources by modifying IDs in API requests.
+# Future Enhancements
+
+Possible future improvements include:
+
+- Redis caching
+- Advanced Role-Based Access Control
+- Distributed WebSocket scaling
+- Message queues
+- BullMQ background processing
+- Booking concurrency protection
+- Advanced hotel search
+- Geospatial hotel search
+- Hotel reviews and ratings
+- Recommendation system
+- Payment retry handling
+- Notification retry queues
+- Automated testing
+- CI/CD pipelines
+- Nginx reverse proxy
+- Structured logging
+- Error monitoring
+- API performance metrics
+- Swagger / OpenAPI documentation
+- Horizontal scaling
+
+---
+
+# Use Cases
+
+## User
+
+A user can:
+
+- Register
+- Login
+- Verify their account
+- Login with Google
+- Login with GitHub
+- Login with Microsoft
+- Browse hotels
+- Create bookings
+- Complete payments
+- Access their dashboard
+- Receive notifications
+- Use real-time communication
+
+## Hotel Owner
+
+A hotel owner can:
+
+- Manage hotel information
+- Monitor bookings
+- Access hotel-specific dashboard functionality
+- Monitor hotel activity
+
+## Administrator
+
+An administrator can:
+
+- Monitor users
+- Monitor hotels
+- Monitor bookings
+- Access platform statistics
+- Manage platform resources
+- Monitor overall platform activity
 
 ---
 
 # Final Note
 
-Saifna demonstrates the architecture of a real-world multi-tenant SaaS backend rather than a simple property rental CRUD application.
+Saifna demonstrates the architecture of a complete hotel booking backend rather than a simple reservation CRUD application.
 
-The project focuses on important backend engineering concepts including multi-tenancy, tenant data isolation, role-based access control, booking concurrency, real-time communication, availability management, caching, and payment workflows.
+The project combines hotel management, booking workflows, Stripe payments, server-side payment webhooks, multi-provider OAuth authentication, user and hotel-owner dashboards, push notifications, Firebase messaging, scheduled cron jobs, cloud media storage, email services, real-time chat, validation, centralized error handling, and Docker-based service separation.
 
-The architecture is designed to evolve into a scalable production platform capable of supporting multiple property owners, large numbers of rental units, concurrent bookings, and real-time user interactions.
+The separation between the main REST backend and the real-time chat server, combined with dedicated notification, authentication, payment, and dashboard modules, provides a strong foundation for evolving the platform into a larger production booking system.
 
 ---
 
@@ -1066,12 +1700,18 @@ The architecture is designed to evolve into a scalable production platform capab
 Backend Developer specializing in:
 
 - Node.js
-- NestJS
-- TypeScript
-- PostgreSQL
-- Prisma
-- Redis
-- Socket.IO
-- Multi-Tenant SaaS Architecture
+- Express.js
+- MongoDB
 - RESTful APIs
-- Scalable Backend Systems
+- Authentication
+- OAuth
+- Stripe Payments
+- Payment Webhooks
+- WebSockets
+- Push Notifications
+- Firebase Cloud Messaging
+- Cron Jobs
+- Docker
+- Cloudinary
+- Booking Systems
+- Backend Architecture
